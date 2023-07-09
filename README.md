@@ -13,6 +13,7 @@
 ```tsx
 import { type Accessor, type Setter } from "solid-js";
 export declare const useClickOutside: (
+  /** Callback to run when click is outside target element */
   callback: (e: MouseEvent) => void,
   options?: {
     /** Boolean signal which will trigger listening to the click event */
