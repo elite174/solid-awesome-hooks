@@ -1,6 +1,6 @@
 # solid-awesome-hooks
 
-A collection of useful hooks for solid-js
+🛠 A collection of useful hooks for solid-js 🛠
 
 ## Hook list
 
