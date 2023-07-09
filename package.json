@@ -22,7 +22,7 @@
   "author": "Vladislav Lipatov",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/elite174/solid-undo-redo"
+    "url": "git+https://github.com/elite174/solid-awesome-hooks"
   },
   "keywords": [
     "solid",
@@ -53,9 +53,9 @@
   "peerDependencies": {
     "solid-js": "^1.7"
   },
-  "homepage": "https://github.com/elite174/solid-undo-redo",
+  "homepage": "https://github.com/elite174/solid-awesome-hooks",
   "bugs": {
-    "url": "https://github.com/elite174/solid-undo-redo/issues"
+    "url": "https://github.com/elite174/solid-awesome-hooks/issues"
   },
   "publishConfig": {
     "access": "public"
