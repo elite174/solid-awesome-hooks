@@ -1,28 +1,37 @@
-## Usage
+# solid-awesome-hooks
 
-```bash
-$ npm install # or pnpm install or yarn install
+A collection of useful hooks for solid-js
+
+## Hook list
+
+- [useClickOutside](#useClickOutside)
+
+## useClickOutside
+
+### Declaration
+
+```tsx
+import { type Accessor, type Setter } from "solid-js";
+export declare const useClickOutside: (
+  callback: (e: MouseEvent) => void,
+  options?: {
+    /** Boolean signal which will trigger listening to the click event */
+    enabled: Accessor<boolean>;
+  }
+) => Setter<HTMLElement>;
 ```
 
-### Learn more on the [Solid Website](https://solidjs.com) and come chat with us on our [Discord](https://discord.com/invite/solidjs)
+### Usage
 
-## Available Scripts
+```tsx
+const [isListeningEnabled] = createSignal(true);
 
-In the project directory, you can run:
+const setElementRef = useClickOutside((event) => console.log(`Clicked outside: ${e}`, {
+    enabled: isListeningEnabled
+})
 
-### `npm run dev`
-
-Runs the app in the development mode.<br>
-Open [http://localhost:5173](http://localhost:5173) to view it in the browser.
-
-### `npm run build`
-
-Builds the app for production to the `dist` folder.<br>
-It correctly bundles Solid in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-## Deployment
-
-Learn more about deploying your application with the [documentations](https://vitejs.dev/guide/static-deploy.html)
+// somewhere in JSX
+<section ref={setElementRef}>
+    Listen to click outside of this section
+</section>
+```
