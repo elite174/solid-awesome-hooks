@@ -1,0 +1,64 @@
+{
+  "name": "solid-awesome-hooks",
+  "version": "1.0.0",
+  "description": "A collection of awesome hooks for solid-js",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "dist/index/index.module.js",
+  "module": "dist/index/index.module.js",
+  "types": "dist/index/index.d.ts",
+  "exports": {
+    ".": {
+      "solid": "./dist/index/index.js",
+      "import": "./dist/index/index.module.js",
+      "browser": "./dist/index/index.module.js",
+      "node": "./dist/index/index.common.js",
+      "require": "./dist/index/index.common.js"
+    }
+  },
+  "sideEffects": false,
+  "author": "Vladislav Lipatov",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elite174/solid-undo-redo"
+  },
+  "keywords": [
+    "solid",
+    "solidjs",
+    "hooks",
+    "collection"
+  ],
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "build:lib": "rollup -c rollup.config.js",
+    "serve": "vite preview"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.22.8",
+    "@babel/preset-env": "^7.22.7",
+    "@babel/preset-typescript": "^7.22.5",
+    "babel-preset-solid": "^1.7.7",
+    "rollup": "^3.26.2",
+    "rollup-preset-solid": "^2.0.1",
+    "solid-js": "^1.7.7",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.0",
+    "vite-plugin-solid": "^2.7.0"
+  },
+  "peerDependencies": {
+    "solid-js": "^1.7"
+  },
+  "homepage": "https://github.com/elite174/solid-undo-redo",
+  "bugs": {
+    "url": "https://github.com/elite174/solid-undo-redo/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "private": false
+}
