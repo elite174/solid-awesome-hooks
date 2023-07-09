@@ -8,7 +8,7 @@
 
 ## useClickOutside
 
-### Declaration
+### Definition
 
 ```tsx
 import { type Accessor, type Setter } from "solid-js";
