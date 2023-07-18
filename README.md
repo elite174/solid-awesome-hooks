@@ -5,6 +5,7 @@
 ## Hook list
 
 - [useClickOutside](#useClickOutside)
+- [usePinchZoom](#usePinchZoom)
 
 ## useClickOutside
 
@@ -29,6 +30,53 @@ const [isListeningEnabled] = createSignal(true);
 
 const setElementRef = useClickOutside((event) => console.log(`Clicked outside: ${e}`, {
     enabled: isListeningEnabled
+})
+
+// somewhere in JSX
+<section ref={setElementRef}>
+    Listen to click outside of this section
+</section>
+```
+
+## usePinchZoom
+
+### Definition
+
+```tsx
+import { type Setter } from "solid-js";
+
+interface UsePinchZoomParams {
+  /**
+   * Callback to be called on zoom in
+   * @param distanceGrowthPX - absolute distance growth between event calls
+   */
+  onZoomIn?: (distanceGrowthPX: number) => void;
+  /**
+   * Callback to be called on zoom out
+   * @param distanceGrowthPX - absolute distance growth between event calls
+   */
+  onZoomOut?: (distanceGrowthPX: number) => void;
+  options?: {
+    /**
+     * @default true
+     */
+    preventTouchMoveEvent?: boolean;
+  };
+}
+
+export declare const usePinchZoom: ({
+  onZoomIn,
+  onZoomOut,
+  options,
+}: UsePinchZoomParams) => Setter<HTMLElement>;
+```
+
+### Usage
+
+```tsx
+const setElementRef = usePinchZoom({
+  onZoomIn: (distanceGrowth) => console.log(`onZoomIn: ${distanceGrowth}`),
+  onZoomOut: (distanceGrowth) => console.log(`onZoomOut: ${distanceGrowth}`)
 })
 
 // somewhere in JSX
