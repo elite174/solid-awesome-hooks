@@ -81,6 +81,6 @@ const setElementRef = usePinchZoom({
 
 // somewhere in JSX
 <section ref={setElementRef}>
-    Listen to click outside of this section
+    Listen to pinch zoom in this component
 </section>
 ```
