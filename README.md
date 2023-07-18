@@ -40,6 +40,9 @@ const setElementRef = useClickOutside((event) => console.log(`Clicked outside: $
 
 ## usePinchZoom
 
+This hook detects pinch zoom (with only 2 pointers) on the tracking html element. Under the hood it uses `touchmove` event.
+The callbacks `onZoomIn` and `onZoomOut` are fired when `touchmove` event is fired.
+
 ### Definition
 
 ```tsx
@@ -48,12 +51,12 @@ import { type Setter } from "solid-js";
 interface UsePinchZoomParams {
   /**
    * Callback to be called on zoom in
-   * @param distanceGrowthPX - absolute distance growth between event calls
+   * @param distanceGrowthPX - absolute distance growth between 2 pointers
    */
   onZoomIn?: (distanceGrowthPX: number) => void;
   /**
    * Callback to be called on zoom out
-   * @param distanceGrowthPX - absolute distance growth between event calls
+   * @param distanceGrowthPX - absolute distance growth between 2 pointers
    */
   onZoomOut?: (distanceGrowthPX: number) => void;
   options?: {
