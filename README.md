@@ -1,5 +1,8 @@
 # solid-awesome-hooks
 
+[![version](https://img.shields.io/npm/v/solid-awesome-hooks?style=for-the-badge)](https://www.npmjs.com/package/solid-awesome-hooks)
+![npm](https://img.shields.io/npm/dw/solid-awesome-hooks?style=for-the-badge)
+
 🛠 A collection of useful hooks for solid-js 🛠
 
 ## Hook list
