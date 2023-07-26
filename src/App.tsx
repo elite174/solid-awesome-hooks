@@ -1,9 +1,13 @@
 import { createSignal } from "solid-js";
 
-import { useClickOutside } from "./lib";
+import { useClickOutside, useSaveToStorage } from "./lib";
 
 function App() {
   const [listeningEnabled, setListeningEnabled] = createSignal(true);
+
+  const [valueToSave] = createSignal("data");
+
+  useSaveToStorage("app:data", valueToSave);
 
   const setRef = useClickOutside((e) => console.log("Clicked outside: ", e), {
     enabled: listeningEnabled,
