@@ -8,7 +8,9 @@
 ## Hook list
 
 - [useClickOutside](#useClickOutside)
+- [useModulePreloader](#useModulePreloader)
 - [usePinchZoom](#usePinchZoom)
+- [useSaveToStorage](#useSaveToStorage)
 
 ## useClickOutside
 
@@ -26,7 +28,7 @@ export declare const useClickOutside: (
 ) => Setter<HTMLElement>;
 ```
 
-### Usage
+### Example
 
 ```tsx
 const [isListeningEnabled] = createSignal(true);
@@ -39,6 +41,53 @@ const setElementRef = useClickOutside((event) => console.log(`Clicked outside: $
 <section ref={setElementRef}>
     Listen to click outside of this section
 </section>
+```
+
+## useModulePreloader
+
+This hook preloads modules imported with `lazy` when the browser is idle one by one.
+
+### Definition
+
+```tsx
+import { lazy } from "solid-js";
+/**
+ * Preloads modules imported with `lazy` when the browser is idle one by one
+ * @param lazyModules
+ */
+export declare const useModulePreloader: (
+  lazyModules: Array<ReturnType<typeof lazy>>
+) => void;
+```
+
+### Example
+
+```tsx
+import { lazy } from "solid-js";
+import { useModulePreloader } from "solid-awesome-hooks";
+
+const LazyPopoverContent = lazy(() => import("./PopoverContent"));
+
+const Component = () => {
+  /**
+   * Sometimes it's useful to preload components
+   * which are hidden from a user (e.g. date pickers, color pickers or some modal content).
+   * At the same time we don't want to show suspense fallbacks for lazy components.
+   * useModulePreloader hook can preload lazy modules when the browser is idle
+   * and the user won't see any suspense fallbacks when the component renders.
+   */
+  useModulePreloader([LazyPopoverContent]);
+
+  return (
+    <Popover
+      Content={
+        <Suspense>
+          <LazyPopoverContent />
+        </Suspense>
+      }
+    />
+  );
+};
 ```
 
 ## usePinchZoom
@@ -77,7 +126,7 @@ export declare const usePinchZoom: ({
 }: UsePinchZoomParams) => Setter<HTMLElement>;
 ```
 
-### Usage
+### Example
 
 ```tsx
 const setElementRef = usePinchZoom({
@@ -89,4 +138,50 @@ const setElementRef = usePinchZoom({
 <section ref={setElementRef}>
     Listen to pinch zoom in this component
 </section>
+```
+
+## useSaveToStorage
+
+This hook will save serializable signal data to some storage (default is `localStorage`)
+
+### Definition
+
+```tsx
+import { type Accessor } from "solid-js";
+type Serializable = number | string | boolean | object;
+type SaveToStorageOptions = {
+  /** @default localStorage */
+  storage?: Storage;
+  /**
+   * If set to true it will save the data when the browser is idle
+   * @default true
+   */
+  deferred?: boolean;
+};
+/**
+ *
+ * @param key - key name in storage
+ * @param data - Reactive accessor to the data
+ * @param options
+ */
+export declare const useSaveToStorage: <T extends Serializable>(
+  key: string,
+  data: Accessor<T>,
+  options?: SaveToStorageOptions
+) => void;
+```
+
+### Example
+
+```tsx
+import { createSignal } from "solid-js";
+import { useSaveToStorage } from "solid-awesome-hooks";
+
+const Component = () => {
+  const [dataToSave] = createSignal("data");
+
+  useSaveToStorage("app:data", dataToSave);
+
+  // ...
+};
 ```
