@@ -5,9 +5,9 @@ import { useClickOutside, useSaveToStorage } from "./lib";
 function App() {
   const [listeningEnabled, setListeningEnabled] = createSignal(true);
 
-  const [valueToSave] = createSignal("data");
+  const [valueToSave, setVal] = createSignal(123);
 
-  useSaveToStorage("app:data", valueToSave);
+  useSaveToStorage("app:data", valueToSave, {defer: false});
 
   const setRef = useClickOutside((e) => console.log("Clicked outside: ", e), {
     enabled: listeningEnabled,
@@ -15,6 +15,7 @@ function App() {
 
   return (
     <main>
+      <button onClick={() => setVal(Math.random())}>click</button>
       <h1>Solid awesome hooks</h1>
       <section>
         <h2>useClickOutside</h2>
