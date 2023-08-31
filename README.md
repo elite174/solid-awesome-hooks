@@ -297,19 +297,24 @@ This hook will save serializable signal data to some storage (default is `localS
 import { type Accessor } from "solid-js";
 type Serializable = number | string | boolean | object;
 type SaveToStorageOptions = {
-  /** @default localStorage */
-  storage?: Storage;
-  /**
-   * If set to true it will save the data when the browser is idle
-   * @default true
-   */
-  saveWhenIdle?: boolean;
-  /**
-   * If set to true it will save the data only after first change
-   * (it passed to solid's `on` `defer` option)
-   * @default true
-   */
-  defer?: boolean;
+    /** @default localStorage */
+    storage?: Storage;
+    /**
+     * If set to true it will save the data when the browser is idle
+     * @default true
+     */
+    saveWhenIdle?: boolean;
+    /**
+     * If set to true it will save the data only after first change
+     * (it passed to solid's `on` `defer` option)
+     * @default true
+     */
+    defer?: boolean;
+    /**
+     * If set to true it will remove the key from storage if the data is null or undefined
+     * @default false
+     */
+    clearOnEmpty?: boolean;
 };
 /**
  *

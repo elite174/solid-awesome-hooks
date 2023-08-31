@@ -1,3 +1,7 @@
+# 1.3.1
+
+- added `clearOnEmpty` option for `useSaveToStorage`
+
 # 1.3.0
 
 ## BREAKING CHANGES
