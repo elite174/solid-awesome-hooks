@@ -16,12 +16,18 @@ type SaveToStorageOptions = {
    * @default true
    */
   defer?: boolean;
+  /**
+   * If set to true it will remove the key from storage if the data is null or undefined
+   * @default false
+   */
+  clearOnEmpty?: boolean;
 };
 
 const DEFAULT_OPTIONS = {
   storage: localStorage,
   saveWhenIdle: true,
   defer: true,
+  clearOnEmpty: false,
 } satisfies SaveToStorageOptions;
 
 /**
@@ -42,13 +48,12 @@ export const useSaveToStorage = <T extends Serializable>(
   createEffect(
     on(
       dataToSave,
-      (rawData) =>
-        resolvedOptions.storage.setItem(
-          key,
-          typeof rawData === "object"
-            ? JSON.stringify(rawData)
-            : String(rawData)
-        ),
+      (rawData) => {
+        if (resolvedOptions.clearOnEmpty && (rawData === null || rawData === undefined))
+          resolvedOptions.storage.removeItem(key);
+        else
+          resolvedOptions.storage.setItem(key, typeof rawData === "object" ? JSON.stringify(rawData) : String(rawData));
+      },
       { defer: resolvedOptions.defer }
     )
   );
