@@ -53,24 +53,21 @@ const Component = () => {
 ```tsx
 import { type Accessor, type Setter } from "solid-js";
 
-type ActionError = {
-  message?: string;
-};
+type ActionState = "pending" | "resolved" | "errored" | "ready";
 
 type TryAction = (
   action: () => Promise<void>,
-  onError?: (e: unknown) => void
+  options?: {
+    catchHandler?: (e: unknown, setErrorMessage: Setter<string>) => unknown | Promise<unknown>;
+    finallyHandler?: () => unknown | Promise<unknown>;
+  }
 ) => Promise<void>;
 
 export type AsyncAction = {
   /** Pass an async function here */
   try: TryAction;
-  state: {
-    /** Is async action in progress */
-    isInProgress: Accessor<boolean>;
-    error: Accessor<ActionError | null>;
-  };
-  setErrorMessage: Setter<string | undefined>;
+  state: Accessor<ActionState>;
+  errorMessage: Accessor<string | undefined>;
   /** Resets progress, error states and error message */
   reset: VoidFunction;
 };
@@ -92,23 +89,26 @@ const Component = () => {
       async () => {
         const data = await someFetch();
 
+        if (Math.random() > 0.5) throw new Error();
+
         // handle ssomthing with data
       },
-      (error) => action.setErrorMessage("Fetch failed")
+      {
+        catchHandler: (error, setErrorMessage) => setErrorMessage("Fetch failed"),
+        finallyHandler: () => console.log("log from `finally` block!"),
+      }
     );
   };
 
   return (
     <section>
-      <button onClick={handleClick} disabled={action.state.isInProgress()}>
+      <button onClick={handleClick} disabled={action.state() === "pending"}>
         click
       </button>
-      <button onClick={action.reset} disabled={!action.state.error()}>
+      <button onClick={action.reset} disabled={action.state() !== "errored"}>
         ResetError
       </button>
-      <Show when={action.state.error()?.message}>
-        {(errorMessage) => <p>{errorMessage()}</p>}
-      </Show>
+      <Show when={action.errorMessage()}>{(errorMessage) => <p>{errorMessage()}</p>}</Show>
     </section>
   );
 };
@@ -156,10 +156,7 @@ import { type Context } from "solid-js";
  * @param context
  * @param errorMessage
  */
-export declare const useContextStrict: <T>(
-  context: Context<T>,
-  errorMessage?: string
-) => T;
+export declare const useContextStrict: <T>(context: Context<T>, errorMessage?: string) => T;
 ```
 
 ### Example
@@ -175,9 +172,7 @@ type ContextType = {
 const SomeContext = createContext<ContextType>();
 
 const SomeService = (props) => (
-  <SomeContext.Provider value={{ text: "Some text" }}>
-    {props.children}
-  </SomeContext.Provider>
+  <SomeContext.Provider value={{ text: "Some text" }}>{props.children}</SomeContext.Provider>
 );
 
 // ... somewhere in the component
@@ -202,9 +197,7 @@ import { lazy } from "solid-js";
  * Preloads modules imported with `lazy` when the browser is idle one by one
  * @param lazyModules
  */
-export declare const useModulePreloader: (
-  lazyModules: Array<ReturnType<typeof lazy>>
-) => void;
+export declare const useModulePreloader: (lazyModules: Array<ReturnType<typeof lazy>>) => void;
 ```
 
 ### Example
@@ -266,11 +259,7 @@ interface UsePinchZoomParams {
   };
 }
 
-export declare const usePinchZoom: ({
-  onZoomIn,
-  onZoomOut,
-  options,
-}: UsePinchZoomParams) => Setter<HTMLElement>;
+export declare const usePinchZoom: ({ onZoomIn, onZoomOut, options }: UsePinchZoomParams) => Setter<HTMLElement>;
 ```
 
 ### Example
@@ -297,24 +286,24 @@ This hook will save serializable signal data to some storage (default is `localS
 import { type Accessor } from "solid-js";
 type Serializable = number | string | boolean | object;
 type SaveToStorageOptions = {
-    /** @default localStorage */
-    storage?: Storage;
-    /**
-     * If set to true it will save the data when the browser is idle
-     * @default true
-     */
-    saveWhenIdle?: boolean;
-    /**
-     * If set to true it will save the data only after first change
-     * (it passed to solid's `on` `defer` option)
-     * @default true
-     */
-    defer?: boolean;
-    /**
-     * If set to true it will remove the key from storage if the data is null or undefined
-     * @default false
-     */
-    clearOnEmpty?: boolean;
+  /** @default localStorage */
+  storage?: Storage;
+  /**
+   * If set to true it will save the data when the browser is idle
+   * @default true
+   */
+  saveWhenIdle?: boolean;
+  /**
+   * If set to true it will save the data only after first change
+   * (it passed to solid's `on` `defer` option)
+   * @default true
+   */
+  defer?: boolean;
+  /**
+   * If set to true it will remove the key from storage if the data is null or undefined
+   * @default false
+   */
+  clearOnEmpty?: boolean;
 };
 /**
  *

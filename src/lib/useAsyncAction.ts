@@ -6,9 +6,9 @@ type TryAction = (
   action: () => Promise<void>,
   options?: {
     /* The function which will be executed in `catch` block */
-    catchHandler?: (e: unknown, setErrorMessage: Setter<string>) => void | Promise<void>;
+    catchHandler?: (e: unknown, setErrorMessage: Setter<string>) => unknown | Promise<unknown>;
     /* The function which will be executed in `finally` block */
-    finallyHandler?: () => void | Promise<void>;
+    finallyHandler?: () => unknown | Promise<unknown>;
   }
 ) => Promise<void>;
 
@@ -26,7 +26,10 @@ export const useAsyncAction = (): AsyncAction => {
   const [errorMessage, setErrorMessage] = createSignal<string>();
 
   const tryAsync: TryAction = async (action, options) => {
-    setActionState("pending");
+    batch(() => {
+      setActionState("pending");
+      setErrorMessage(undefined);
+    });
 
     try {
       await action();

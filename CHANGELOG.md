@@ -1,3 +1,7 @@
+# 1.3.2
+
+- Reworked `useAsyncAction` hook. Added support for `finally` block.
+
 # 1.3.1
 
 - added `clearOnEmpty` option for `useSaveToStorage`

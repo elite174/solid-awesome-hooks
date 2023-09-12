@@ -1,6 +1,45 @@
-import { createSignal } from "solid-js";
+import { Show, createEffect, createSignal } from "solid-js";
 
-import { useClickOutside, useSaveToStorage } from "./lib";
+import { useClickOutside, useSaveToStorage, useAsyncAction } from "./lib";
+
+const someFetch = () =>
+  new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, 2000);
+  });
+
+const Component = () => {
+  const action = useAsyncAction();
+
+  const handleClick = async () => {
+    action.try(
+      async () => {
+        const data = await someFetch();
+
+        if (Math.random() > 0.5) throw new Error();
+
+        // handle ssomthing with data
+      },
+      {
+        catchHandler: (error, setErrorMessage) => setErrorMessage("Fetch failed"),
+        finallyHandler: () => console.log("log from `finally` block!"),
+      }
+    );
+  };
+
+  return (
+    <section>
+      <button onClick={handleClick} disabled={action.state() === "pending"}>
+        click
+      </button>
+      <button onClick={action.reset} disabled={action.state() !== "errored"}>
+        ResetError
+      </button>
+      <Show when={action.errorMessage()}>{(errorMessage) => <p>{errorMessage()}</p>}</Show>
+    </section>
+  );
+};
 
 function App() {
   const [listeningEnabled, setListeningEnabled] = createSignal(true);
@@ -15,6 +54,7 @@ function App() {
 
   return (
     <main>
+      <Component />
       <button onClick={() => setVal(Math.random())}>click</button>
       <h1>Solid awesome hooks</h1>
       <section>
