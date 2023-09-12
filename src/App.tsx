@@ -7,7 +7,7 @@ function App() {
 
   const [valueToSave, setVal] = createSignal(123);
 
-  useSaveToStorage("app:data", valueToSave, {defer: false});
+  useSaveToStorage("app:data", valueToSave, { defer: false });
 
   const setRef = useClickOutside((e) => console.log("Clicked outside: ", e), {
     enabled: listeningEnabled,
@@ -20,8 +20,7 @@ function App() {
       <section>
         <h2>useClickOutside</h2>
         <button ref={setRef} onClick={() => setListeningEnabled((e) => !e)}>
-          Click outside (see the console){" "}
-          {listeningEnabled() ? "enabled" : "disabled"}
+          Click outside (see the console) {listeningEnabled() ? "enabled" : "disabled"}
         </button>
       </section>
     </main>

@@ -1,74 +1,56 @@
-import {
-  type Accessor,
-  type Setter,
-  batch,
-  createMemo,
-  createSignal,
-} from "solid-js";
+import { type Accessor, type Setter, createSignal, batch } from "solid-js";
 
-type ActionError = {
-  message?: string;
-};
+type ActionState = "pending" | "resolved" | "errored" | "ready";
 
 type TryAction = (
   action: () => Promise<void>,
-  onError?: (e: unknown) => void
+  options?: {
+    /* The function which will be executed in `catch` block */
+    catchHandler?: (e: unknown, setErrorMessage: Setter<string>) => void | Promise<void>;
+    /* The function which will be executed in `finally` block */
+    finallyHandler?: () => void | Promise<void>;
+  }
 ) => Promise<void>;
 
 export type AsyncAction = {
   /** Pass an async function here */
   try: TryAction;
-  state: {
-    /** Is async action in progress */
-    isInProgress: Accessor<boolean>;
-    error: Accessor<ActionError | null>;
-  };
-  setErrorMessage: Setter<string | undefined>;
+  state: Accessor<ActionState>;
+  errorMessage: Accessor<string | undefined>;
   /** Resets progress, error states and error message */
   reset: VoidFunction;
 };
 
 export const useAsyncAction = (): AsyncAction => {
-  const [isInProgress, setInProgress] = createSignal(false);
-  const [isErrored, setErrored] = createSignal(false);
+  const [actionState, setActionState] = createSignal<ActionState>("ready");
   const [errorMessage, setErrorMessage] = createSignal<string>();
 
-  const tryAsync: TryAction = async (action, onError) => {
-    batch(() => {
-      setInProgress(true);
-      setErrored(false);
-    });
+  const tryAsync: TryAction = async (action, options) => {
+    setActionState("pending");
 
     try {
       await action();
+
+      setActionState("resolved");
     } catch (error) {
-      batch(() => {
-        setErrored(true);
-        onError?.(error);
-      });
+      setActionState("errored");
+
+      await options?.catchHandler?.(error, setErrorMessage);
     } finally {
-      setInProgress(false);
+      await options?.finallyHandler?.();
     }
   };
 
-  const error = createMemo(() =>
-    isErrored() ? { message: errorMessage() } : null
-  );
-
   const reset = () =>
     batch(() => {
-      setInProgress(false);
-      setErrored(false);
+      setActionState("ready");
       setErrorMessage(undefined);
     });
 
   return {
     try: tryAsync,
-    state: {
-      error,
-      isInProgress,
-    },
+    state: actionState,
+    errorMessage,
     reset,
-    setErrorMessage,
   };
 };
