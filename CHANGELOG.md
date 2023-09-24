@@ -1,3 +1,7 @@
+# 1.4.0
+
+- added `useVisibleState` hook
+
 # 1.3.2
 
 - Reworked `useAsyncAction` hook. Added support for `finally` block.

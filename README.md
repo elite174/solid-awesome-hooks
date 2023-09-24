@@ -14,6 +14,7 @@
 - [useModulePreloader](#useModulePreloader)
 - [usePinchZoom](#usePinchZoom)
 - [useSaveToStorage](#useSaveToStorage)
+- [useVisibleState](#useVisibleState)
 
 ## useAbortController
 
@@ -330,5 +331,47 @@ const Component = () => {
   useSaveToStorage("app:data", dataToSave);
 
   // ...
+};
+```
+
+## useVisibleState
+
+This hook is useful when you work with dropdowns or popovers. These things might be controlled by boolean state, so you don't need to write it every time.
+
+### Definition
+
+```tsx
+export declare const useVisibleState: (initialState?: boolean) => {
+  isOpened: import("solid-js").Accessor<boolean>;
+  setOpened: import("solid-js").Setter<boolean>;
+  hide: () => false;
+  reveal: () => true;
+};
+```
+
+### Example
+
+```tsx
+import { Popover } from "some-lib";
+import { useVisibleState } from "solid-awesome-hooks";
+
+const Component = () => {
+  const popover = useVisibleState();
+
+  return (
+    <Popover
+      open={popover.isOpen()}
+      onOpenChange={popover.setOpen}
+      trigger={<button type="button">Popover trigger</button>}
+      content={
+        <div>
+          <p>Some content</p>
+          <button type="button" onClick={popover.close}>
+            Close popover
+          </button>
+        </div>
+      }
+    />
+  );
 };
 ```

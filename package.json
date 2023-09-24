@@ -1,6 +1,6 @@
 {
   "name": "solid-awesome-hooks",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "description": "A collection of awesome hooks for solid-js",
   "files": [
     "dist"
@@ -15,7 +15,8 @@
       "import": "./dist/index/index.module.js",
       "browser": "./dist/index/index.module.js",
       "node": "./dist/index/index.common.js",
-      "require": "./dist/index/index.common.js"
+      "require": "./dist/index/index.common.js",
+      "types": "./dist/index/index.d.ts"
     }
   },
   "sideEffects": false,
