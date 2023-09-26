@@ -6,7 +6,7 @@ type TryAction = (
   action: () => Promise<void>,
   options?: {
     /* The function which will be executed in `catch` block */
-    catchHandler?: (e: unknown, setErrorMessage: Setter<string>) => unknown | Promise<unknown>;
+    catchHandler?: (e: unknown) => unknown | Promise<unknown>;
     /* The function which will be executed in `finally` block */
     finallyHandler?: () => unknown | Promise<unknown>;
   }
@@ -17,6 +17,7 @@ export type AsyncAction = {
   try: TryAction;
   state: Accessor<ActionState>;
   errorMessage: Accessor<string | undefined>;
+  setErrorMessage: Setter<string | undefined>;
   /** Resets progress, error states and error message */
   reset: VoidFunction;
 };
@@ -38,7 +39,7 @@ export const useAsyncAction = (): AsyncAction => {
     } catch (error) {
       setActionState("errored");
 
-      await options?.catchHandler?.(error, setErrorMessage);
+      await options?.catchHandler?.(error);
     } finally {
       await options?.finallyHandler?.();
     }
@@ -51,6 +52,7 @@ export const useAsyncAction = (): AsyncAction => {
     });
 
   return {
+    setErrorMessage,
     try: tryAsync,
     state: actionState,
     errorMessage,

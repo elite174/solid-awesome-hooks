@@ -1,6 +1,8 @@
-import { Show, createEffect, createSignal } from "solid-js";
+import { Show, createContext, createSignal } from "solid-js";
 
-import { useClickOutside, useSaveToStorage, useAsyncAction } from "./lib";
+import { useClickOutside, useSaveToStorage, useAsyncAction, useContextStrict } from "./lib";
+
+const C = createContext<number>();
 
 const someFetch = () =>
   new Promise((resolve) => {
@@ -11,6 +13,7 @@ const someFetch = () =>
 
 const Component = () => {
   const action = useAsyncAction();
+  const c = useContextStrict(C);
 
   const handleClick = async () => {
     action.try(
@@ -22,7 +25,7 @@ const Component = () => {
         // handle ssomthing with data
       },
       {
-        catchHandler: (error, setErrorMessage) => setErrorMessage("Fetch failed"),
+        catchHandler: (error) => action.setErrorMessage("Fetch failed"),
         finallyHandler: () => console.log("log from `finally` block!"),
       }
     );

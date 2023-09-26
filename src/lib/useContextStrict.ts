@@ -8,7 +8,7 @@ import { Context, useContext as useContextBase } from "solid-js";
 export const useContextStrict = <T>(
   context: Context<T>,
   errorMessage = `Cannot get ${context} context`
-) => {
+): NonNullable<T> => {
   const currentContext = useContextBase(context);
 
   if (!currentContext) throw new Error(errorMessage);
