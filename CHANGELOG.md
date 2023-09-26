@@ -1,3 +1,9 @@
+# 1.5.0
+
+- added `useScrollTo` hook
+- `useAsyncAction`: action now exposes `setErrorMessage` function
+- `useContextString`: fixed types
+
 # 1.4.0
 
 - added `useVisibleState` hook

@@ -14,6 +14,7 @@
 - [useModulePreloader](#useModulePreloader)
 - [usePinchZoom](#usePinchZoom)
 - [useSaveToStorage](#useSaveToStorage)
+- [useScrollTo](#useScrollTo)
 - [useVisibleState](#useVisibleState)
 
 ## useAbortController
@@ -59,7 +60,7 @@ type ActionState = "pending" | "resolved" | "errored" | "ready";
 type TryAction = (
   action: () => Promise<void>,
   options?: {
-    catchHandler?: (e: unknown, setErrorMessage: Setter<string>) => unknown | Promise<unknown>;
+    catchHandler?: (e: unknown) => unknown | Promise<unknown>;
     finallyHandler?: () => unknown | Promise<unknown>;
   }
 ) => Promise<void>;
@@ -69,6 +70,7 @@ export type AsyncAction = {
   try: TryAction;
   state: Accessor<ActionState>;
   errorMessage: Accessor<string | undefined>;
+  setErrorMessage: Setter<string | undefined>;
   /** Resets progress, error states and error message */
   reset: VoidFunction;
 };
@@ -95,7 +97,7 @@ const Component = () => {
         // handle ssomthing with data
       },
       {
-        catchHandler: (error, setErrorMessage) => setErrorMessage("Fetch failed"),
+        catchHandler: (error) => action.setErrorMessage("Fetch failed"),
         finallyHandler: () => console.log("log from `finally` block!"),
       }
     );
@@ -157,7 +159,7 @@ import { type Context } from "solid-js";
  * @param context
  * @param errorMessage
  */
-export declare const useContextStrict: <T>(context: Context<T>, errorMessage?: string) => T;
+export declare const useContextStrict: <T>(context: Context<T>, errorMessage?: string) => NonNullable<T>;
 ```
 
 ### Example
@@ -331,6 +333,47 @@ const Component = () => {
   useSaveToStorage("app:data", dataToSave);
 
   // ...
+};
+```
+
+## useScrollTo
+
+This hook comes in handy when you need to scroll some element on some trigger
+
+### Definition
+
+```tsx
+import { type Accessor } from "solid-js";
+
+interface Params extends ScrollOptions, ScrollToOptions {
+  scrollTrigger: Accessor<unknown>;
+  /**
+   * if set to true scrolling will be skipped on initial rendering
+   * @default true
+   */
+  defer?: boolean;
+}
+
+export declare const useScrollTo: <T extends HTMLElement>(params: Params) => import("solid-js").Setter<T>;
+```
+
+### Example
+
+```tsx
+import { useScrollTo } from "solid-awesome-hooks";
+
+const Component = () => {
+  // Get search params from the router
+  const [searchParams] = useSearchParams();
+
+  // scroll page content to the top when changing videos page
+  const setScrollableElement = useScrollTo({
+    scrollTrigger: () => searchParams.page,
+    behavior: "smooth",
+    top: 0,
+  });
+
+  return <div ref={setScrollableElement}>{/** Some content here */}</div>;
 };
 ```
 
