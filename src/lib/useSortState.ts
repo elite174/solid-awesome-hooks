@@ -20,9 +20,11 @@ export const useSortState = (initialSortState = SortState.ASCENDING) => {
   return {
     order,
     setOrder,
-    toggleOrder,
     isAscending,
     isDescending,
+    /** Switches order to another one */
+    toggleOrder,
+    /** Resets sort order to the initial */
     resetOrder,
   };
 };

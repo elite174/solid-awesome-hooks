@@ -1,3 +1,7 @@
+# 1.6.0
+
+- added `useSortState`
+
 # 1.5.0
 
 - added `useScrollTo` hook

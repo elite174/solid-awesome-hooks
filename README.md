@@ -15,6 +15,7 @@
 - [usePinchZoom](#usePinchZoom)
 - [useSaveToStorage](#useSaveToStorage)
 - [useScrollTo](#useScrollTo)
+- [useSortState](#useSortState)
 - [useVisibleState](#useVisibleState)
 
 ## useAbortController
@@ -374,6 +375,28 @@ const Component = () => {
   });
 
   return <div ref={setScrollableElement}>{/** Some content here */}</div>;
+};
+```
+
+## useSortState
+
+### Definition
+
+```tsx
+export declare enum SortState {
+  ASCENDING = 1,
+  DESCENDING = -1,
+}
+
+export declare const useSortState: (initialSortState?: SortState) => {
+  order: import("solid-js").Accessor<SortState>;
+  setOrder: import("solid-js").Setter<SortState>;
+  isAscending: import("solid-js").Accessor<boolean>;
+  isDescending: import("solid-js").Accessor<boolean>;
+  /** Switches order to another one */
+  toggleOrder: () => SortState;
+  /** Resets sort order to the initial */
+  resetOrder: () => SortState;
 };
 ```
 

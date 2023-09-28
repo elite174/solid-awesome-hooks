@@ -7,3 +7,4 @@ export { useAsyncAction, type AsyncAction } from "./useAsyncAction";
 export { useContextStrict } from "./useContextStrict";
 export { useVisibleState } from "./useVisibleState";
 export { useScrollTo } from "./useScrollTo";
+export { useSortState } from "./useSortState";
