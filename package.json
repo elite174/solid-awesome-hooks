@@ -1,6 +1,6 @@
 {
   "name": "solid-awesome-hooks",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "A collection of awesome hooks for solid-js",
   "files": [
     "dist"

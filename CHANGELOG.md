@@ -1,3 +1,7 @@
+# 1.6.1
+
+- Fixed types for `useSaveToStorage` (`null` and `undefined` are supported)
+
 # 1.6.0
 
 - added `useSortState`

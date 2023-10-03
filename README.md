@@ -288,7 +288,7 @@ This hook will save serializable signal data to some storage (default is `localS
 
 ```tsx
 import { type Accessor } from "solid-js";
-type Serializable = number | string | boolean | object;
+type Serializable = number | string | boolean | object | null | undefined;
 type SaveToStorageOptions = {
   /** @default localStorage */
   storage?: Storage;
