@@ -1,6 +1,6 @@
 import { Show, createContext, createSignal } from "solid-js";
 
-import { useClickOutside, useSaveToStorage, useAsyncAction, useContextStrict } from "./lib";
+import { useClickOutside, useSaveToStorage, useAsyncAction } from "./lib";
 
 const C = createContext<number>();
 
@@ -13,7 +13,6 @@ const someFetch = () =>
 
 const Component = () => {
   const action = useAsyncAction();
-  const c = useContextStrict(C);
 
   const handleClick = async () => {
     action.try(
@@ -47,7 +46,7 @@ const Component = () => {
 function App() {
   const [listeningEnabled, setListeningEnabled] = createSignal(true);
 
-  const [valueToSave, setVal] = createSignal(123);
+  const [valueToSave, setVal] = createSignal<number>();
 
   useSaveToStorage("app:data", valueToSave, { defer: false });
 
@@ -58,7 +57,7 @@ function App() {
   return (
     <main>
       <Component />
-      <button onClick={() => setVal(Math.random())}>click</button>
+      <button onClick={() => setVal(Math.random() > 0.5 ? 1 : undefined)}>click</button>
       <h1>Solid awesome hooks</h1>
       <section>
         <h2>useClickOutside</h2>

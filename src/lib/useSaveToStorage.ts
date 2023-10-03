@@ -1,6 +1,6 @@
 import { type Accessor, createDeferred, createEffect, on } from "solid-js";
 
-type Serializable = number | string | boolean | object;
+type Serializable = number | string | boolean | object | null | undefined;
 
 type SaveToStorageOptions = {
   /** @default localStorage */
