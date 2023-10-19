@@ -5,9 +5,9 @@ import { useClickOutside, useSaveToStorage, useAsyncAction } from "./lib";
 const C = createContext<number>();
 
 const someFetch = () =>
-  new Promise((resolve) => {
+  new Promise<string>((resolve, reject) => {
     setTimeout(() => {
-      resolve();
+      Math.random() > 0.5 ? resolve("resolved") : reject("Error");
     }, 2000);
   });
 
@@ -15,19 +15,9 @@ const Component = () => {
   const action = useAsyncAction();
 
   const handleClick = async () => {
-    action.try(
-      async () => {
-        const data = await someFetch();
-
-        if (Math.random() > 0.5) throw new Error();
-
-        // handle ssomthing with data
-      },
-      {
-        catchHandler: (error) => action.setErrorMessage("Fetch failed"),
-        finallyHandler: () => console.log("log from `finally` block!"),
-      }
-    );
+    const data = await action.try(async () => {
+      return await someFetch();
+    });
   };
 
   return (

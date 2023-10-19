@@ -1,10 +1,4 @@
-import {
-  type Accessor,
-  type Setter,
-  createEffect,
-  createSignal,
-  onCleanup,
-} from "solid-js";
+import { type Accessor, type Setter, createEffect, createSignal, onCleanup } from "solid-js";
 
 export const useClickOutside = (
   /** Callback to run when click is outside target element */
@@ -14,7 +8,7 @@ export const useClickOutside = (
     /** Boolean signal which will trigger listening to the click event */
     enabled: Accessor<boolean>;
   }
-): Setter<HTMLElement> => {
+): Setter<HTMLElement | undefined> => {
   const [elementRef, setElementRef] = createSignal<HTMLElement>();
 
   const listenToEvent = () => options?.enabled() ?? true;

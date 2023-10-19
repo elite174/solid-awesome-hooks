@@ -2,15 +2,7 @@ import { type Accessor, type Setter, createSignal, batch } from "solid-js";
 
 type ActionState = "pending" | "resolved" | "errored" | "ready";
 
-type TryAction = (
-  action: () => Promise<void>,
-  options?: {
-    /* The function which will be executed in `catch` block */
-    catchHandler?: (e: unknown) => unknown | Promise<unknown>;
-    /* The function which will be executed in `finally` block */
-    finallyHandler?: () => unknown | Promise<unknown>;
-  }
-) => Promise<void>;
+type TryAction = <T>(action: () => Promise<T>) => Promise<T>;
 
 export type AsyncAction = {
   /** Pass an async function here */
@@ -26,22 +18,22 @@ export const useAsyncAction = (): AsyncAction => {
   const [actionState, setActionState] = createSignal<ActionState>("ready");
   const [errorMessage, setErrorMessage] = createSignal<string>();
 
-  const tryAsync: TryAction = async (action, options) => {
+  const tryAsync: TryAction = async (action) => {
     batch(() => {
       setActionState("pending");
       setErrorMessage(undefined);
     });
 
     try {
-      await action();
+      const data = await action();
 
       setActionState("resolved");
+
+      return data;
     } catch (error) {
       setActionState("errored");
 
-      await options?.catchHandler?.(error);
-    } finally {
-      await options?.finallyHandler?.();
+      throw error;
     }
   };
 
