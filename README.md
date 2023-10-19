@@ -87,11 +87,7 @@ const Component = () => {
     let data;
 
     try {
-      data = await action.try(async () => {
-        return await someFetch();
-
-        // handle ssomthing with data
-      });
+      data = await action.try(someFetch);
     } catch (error) {
       console.error(error);
     }

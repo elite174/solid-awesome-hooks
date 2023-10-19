@@ -16,13 +16,9 @@ const Component = () => {
 
   const handleClick = async () => {
     let data;
-  
-    try {
-      data = await action.try(async () => {
-        return await someFetch();
 
-        // handle ssomthing with data
-      });
+    try {
+      data = await action.try(someFetch);
     } catch (error) {
       console.error(error);
     }
