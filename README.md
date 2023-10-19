@@ -13,6 +13,7 @@
 - [useContextStrict](#useContextStrict)
 - [useModulePreloader](#useModulePreloader)
 - [usePinchZoom](#usePinchZoom)
+- [usePolling](#usepolling)
 - [useSaveToStorage](#useSaveToStorage)
 - [useScrollTo](#useScrollTo)
 - [useSortState](#useSortState)
@@ -58,13 +59,7 @@ import { type Accessor, type Setter } from "solid-js";
 
 type ActionState = "pending" | "resolved" | "errored" | "ready";
 
-type TryAction = (
-  action: () => Promise<void>,
-  options?: {
-    catchHandler?: (e: unknown) => unknown | Promise<unknown>;
-    finallyHandler?: () => unknown | Promise<unknown>;
-  }
-) => Promise<void>;
+type TryAction = <T>(action: () => Promise<T>) => Promise<T>;
 
 export type AsyncAction = {
   /** Pass an async function here */
@@ -89,19 +84,19 @@ const Component = () => {
   const action = useAsyncAction();
 
   const handleClick = async () => {
-    action.try(
-      async () => {
-        const data = await someFetch();
+    let data;
 
-        if (Math.random() > 0.5) throw new Error();
+    try {
+      data = await action.try(async () => {
+        return await someFetch();
 
         // handle ssomthing with data
-      },
-      {
-        catchHandler: (error) => action.setErrorMessage("Fetch failed"),
-        finallyHandler: () => console.log("log from `finally` block!"),
-      }
-    );
+      });
+    } catch (error) {
+      console.error(error);
+    }
+
+    console.log(data);
   };
 
   return (
@@ -124,14 +119,14 @@ const Component = () => {
 
 ```tsx
 import { type Accessor, type Setter } from "solid-js";
+
 export declare const useClickOutside: (
-  /** Callback to run when click is outside target element */
   callback: (e: MouseEvent) => void,
   options?: {
     /** Boolean signal which will trigger listening to the click event */
     enabled: Accessor<boolean>;
   }
-) => Setter<HTMLElement>;
+) => Setter<HTMLElement | undefined>;
 ```
 
 ### Example
@@ -278,6 +273,49 @@ const setElementRef = usePinchZoom({
 <section ref={setElementRef}>
     Listen to pinch zoom in this component
 </section>
+```
+
+## usePolling
+
+This hook can be useful when you need to implement polling for a resource
+
+### Definition
+
+```tsx
+import { type Accessor } from "solid-js";
+type UsePollingOptions = {
+  /**
+   * Time interval to call "refetch" function
+   * @default 3000
+   */
+  pollingTime?: number;
+  enabled?: Accessor<boolean>;
+};
+/**
+ *
+ * @param readyTrigger Reactive signal that tells that the poll function can now be scheduled
+ * @param poll Function
+ * @param options {UsePollingOptions}
+ */
+export declare const usePolling: (
+  readyTrigger: Accessor<unknown>,
+  poll: VoidFunction,
+  options?: UsePollingOptions
+) => void;
+```
+
+### Example
+
+```tsx
+import { usePolling } from "solid-awesome-hooks";
+import { createResource } from "solid-js";
+
+// Inside a component...
+const [data, { refetch }] = createResource(() => fetchData());
+
+usePolling(data, refetch, {
+  enabled: () => data()?.status === GenerationStatus.IN_PROGRESS,
+});
 ```
 
 ## useSaveToStorage

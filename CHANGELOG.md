@@ -1,3 +1,9 @@
+# 1.7.0
+
+- Added `usePolling` hook
+- Improved `useAsyncAction` hook: now it's a promise which can return a value!
+- Fixed types for `useClickOutside`
+
 # 1.6.1
 
 - Fixed types for `useSaveToStorage` (`null` and `undefined` are supported)

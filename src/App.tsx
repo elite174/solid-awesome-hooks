@@ -15,9 +15,19 @@ const Component = () => {
   const action = useAsyncAction();
 
   const handleClick = async () => {
-    const data = await action.try(async () => {
-      return await someFetch();
-    });
+    let data;
+  
+    try {
+      data = await action.try(async () => {
+        return await someFetch();
+
+        // handle ssomthing with data
+      });
+    } catch (error) {
+      console.error(error);
+    }
+
+    console.log(data);
   };
 
   return (
