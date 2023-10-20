@@ -2,7 +2,7 @@ import { type Accessor, createEffect, on, onCleanup, type Owner, runWithOwner, g
 
 type UsePollingOptions = {
   /**
-   * Time interval to call "refetch" function
+   * Time interval to call "poll" function
    * @default 3000
    */
   pollingTime?: number;
