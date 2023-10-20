@@ -1,14 +1,14 @@
 import { createSignal } from "solid-js";
 
 export const useVisibleState = (initialState?: boolean) => {
-  const [isOpened, setOpened] = createSignal<boolean>(Boolean(initialState));
+  const [isOpen, setOpen] = createSignal<boolean>(Boolean(initialState));
 
-  const hide = () => setOpened(false);
-  const reveal = () => setOpened(true);
+  const hide = () => setOpen(false);
+  const reveal = () => setOpen(true);
 
   return {
-    isOpened,
-    setOpened,
+    isOpen,
+    setOpen,
     hide,
     reveal,
   };

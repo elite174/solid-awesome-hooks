@@ -466,7 +466,7 @@ const Component = () => {
       content={
         <div>
           <p>Some content</p>
-          <button type="button" onClick={popover.close}>
+          <button type="button" onClick={popover.hide}>
             Close popover
           </button>
         </div>
