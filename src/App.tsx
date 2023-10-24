@@ -1,6 +1,6 @@
-import { Show, createContext, createSignal } from "solid-js";
+import { Show, createContext, createResource, createSignal, getOwner } from "solid-js";
 
-import { useClickOutside, useSaveToStorage, useAsyncAction } from "./lib";
+import { useClickOutside, useSaveToStorage, useAsyncAction, useAbortController } from "./lib";
 
 const C = createContext<number>();
 
@@ -12,6 +12,18 @@ const someFetch = () =>
   });
 
 const Component = () => {
+  const owner = getOwner();
+
+  const [r, { refetch }] = createResource(async () => {
+    useAbortController({ fallbackOwner: owner });
+
+    await someFetch();
+  });
+
+  setTimeout(() => {
+    refetch();
+  }, 5000);
+
   const action = useAsyncAction();
 
   const handleClick = async () => {
