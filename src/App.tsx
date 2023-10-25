@@ -1,6 +1,6 @@
 import { Show, createContext, createResource, createSignal, getOwner } from "solid-js";
 
-import { useClickOutside, useSaveToStorage, useAsyncAction, useAbortController } from "./lib";
+import { useClickOutside, useSaveToStorage, useAsyncAction, useAbortController, useVisibleState } from "./lib";
 
 const C = createContext<number>();
 
@@ -62,11 +62,14 @@ function App() {
     enabled: listeningEnabled,
   });
 
+  const state = useVisibleState();
+
   return (
     <main>
       <Component />
       <button onClick={() => setVal(Math.random() > 0.5 ? 1 : undefined)}>click</button>
       <h1>Solid awesome hooks</h1>
+      <button onClick={state.withAction((e) => console.log(e), "reveal")}>{String(state.isOpen())}</button>
       <section>
         <h2>useClickOutside</h2>
         <button ref={setRef} onClick={() => setListeningEnabled((e) => !e)}>
