@@ -9,3 +9,4 @@ export { useVisibleState } from "./useVisibleState";
 export { useScrollTo } from "./useScrollTo";
 export { useSortState } from "./useSortState";
 export { usePolling } from "./usePolling";
+export { useSyncState } from "./useSyncState";

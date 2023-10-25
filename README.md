@@ -17,6 +17,7 @@
 - [useSaveToStorage](#useSaveToStorage)
 - [useScrollTo](#useScrollTo)
 - [useSortState](#useSortState)
+- [useSyncState](#usesyncstate)
 - [useVisibleState](#useVisibleState)
 
 ## useAbortController
@@ -24,12 +25,19 @@
 ### Definition
 
 ```tsx
+import { type Owner } from "solid-js";
+
+type Options = {
+  reason?: any;
+  fallbackOwner?: Owner | null;
+};
+
 /**
  * Returns AbortController instance
  * Can be useful inside createResource
- * @param reason - reason for abort on scope cleanup
+ * If there's no owner scope abort() won't be called
  */
-export declare const useAbortController: (reason?: any) => AbortController;
+export declare const useAbortController: ({ reason, fallbackOwner }?: Options) => AbortController;
 ```
 
 ### Example
@@ -278,17 +286,24 @@ This hook can be useful when you need to implement polling for a resource
 ### Definition
 
 ```tsx
-import { type Accessor } from "solid-js";
+import { type Accessor, type Owner } from "solid-js";
+
 type UsePollingOptions = {
   /**
-   * Time interval to call "refetch" function
+   * Time interval to call "poll" function
    * @default 3000
    */
   pollingTime?: number;
   enabled?: Accessor<boolean>;
+  /**
+   * This hook uses setTimeout for polling, so it might be the case when `poll` function triggers reactive things.
+   * To make it work correctly pass proper owner for the `poll` function.
+   * Otherwise it will be assigned automatically (the owner of the hook will be used)
+   */
+  owner?: Owner;
 };
+
 /**
- *
  * @param readyTrigger Reactive signal that tells that the poll function can now be scheduled
  * @param poll Function
  * @param options {UsePollingOptions}
@@ -434,6 +449,46 @@ export declare const useSortState: (initialSortState?: SortState) => {
 };
 ```
 
+## useSyncState
+
+You should use this hook only when you want to sync your props with local state.
+
+### Definition
+
+```tsx
+import { type Accessor } from "solid-js";
+/**
+ * This hook may be used to sync your state (signals or stores) with props.
+ * Basically it's just a shorthand for createComputed(on(source, setter, { defer }))
+ * @param source Reactive signal
+ * @param setter A function which runs immediately when source changes
+ * @param defer A boolean value which is passed to on's defer option. Default - true.
+ */
+export declare const useSyncState: <T>(source: Accessor<T>, setter: (value: T) => void, defer?: boolean) => void;
+```
+
+### Example
+
+```tsx
+import { useSyncState } from "solid-awesome-hooks";
+import { batch } from "solid-js";
+
+// Somewhere inside datepicker component
+// sync state with props
+useSyncState(
+  () => props.selectedDate,
+  (selectedDate) => {
+    if (!selectedDate) return;
+
+    batch(() => {
+      setCurrentYear(selectedDate.getFullYear());
+      setCurrentMonth(selectedDate.getMonth());
+      setCurrentDate(selectedDate.getDate());
+    });
+  }
+);
+```
+
 ## useVisibleState
 
 This hook is useful when you work with dropdowns or popovers. These things might be controlled by boolean state, so you don't need to write it every time.
@@ -442,8 +497,8 @@ This hook is useful when you work with dropdowns or popovers. These things might
 
 ```tsx
 export declare const useVisibleState: (initialState?: boolean) => {
-  isOpened: import("solid-js").Accessor<boolean>;
-  setOpened: import("solid-js").Setter<boolean>;
+  isOpen: import("solid-js").Accessor<boolean>;
+  setOpen: import("solid-js").Setter<boolean>;
   hide: () => false;
   reveal: () => true;
 };

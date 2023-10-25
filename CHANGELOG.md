@@ -1,3 +1,10 @@
+# 1.8.0
+
+- Added `useSyncState` hook
+- Improved `useAbortController`: now there's no memory leak because onCleanup won't be registered without proper owner. Also you can pass optional fallback owner
+- Improved `usePolling` hook: now you can pass an owner to the hook
+- Changed function names for `useVisibleState` hook
+
 # 1.7.0
 
 - Added `usePolling` hook
