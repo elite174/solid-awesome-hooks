@@ -9,7 +9,7 @@ export const useVisibleState = (initialState?: boolean) => {
   const reveal = () => setOpen(true);
 
   const withAction =
-    <T extends any[], U>(callback?: (...args: T) => U, action: Action = "hide") =>
+    <T extends any[], U>(action: Action, callback?: (...args: T) => U) =>
     (...args: T) => {
       const result = callback?.(...args);
 
