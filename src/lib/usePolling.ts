@@ -12,7 +12,7 @@ type UsePollingOptions = {
    * To make it work correctly pass proper owner for the `poll` function.
    * Otherwise it will be assigned automatically (the owner of the hook will be used)
    */
-  owner?: Owner;
+  owner?: Owner | null;
 };
 
 const DEFAULT_OPTIONS = {
