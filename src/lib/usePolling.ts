@@ -44,10 +44,14 @@ export const usePolling = (readyTrigger: Accessor<unknown>, poll: VoidFunction, 
   // Thus, we don't rely on slow network
   createEffect(
     on([readyTrigger, enabled], ([_, isEnabled]) => {
-      if (remainingCalls <= 0) return;
       if (!isEnabled) return;
 
       const timer = setTimeout(() => {
+        if (remainingCalls <= 0) {
+          clearTimeout(timer);
+          return;
+        }
+
         pollWithOwner();
 
         remainingCalls -= 1;
