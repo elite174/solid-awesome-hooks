@@ -69,7 +69,7 @@ function App() {
       <Component />
       <button onClick={() => setVal(Math.random() > 0.5 ? 1 : undefined)}>click</button>
       <h1>Solid awesome hooks</h1>
-      <button onClick={state.withAction((e) => console.log(e), "reveal")}>{String(state.isOpen())}</button>
+      <button onClick={state.withAction("reveal", (e) => console.log(e))}>{String(state.isOpen())}</button>
       <section>
         <h2>useClickOutside</h2>
         <button ref={setRef} onClick={() => setListeningEnabled((e) => !e)}>

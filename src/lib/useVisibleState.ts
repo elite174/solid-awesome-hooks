@@ -24,6 +24,7 @@ export const useVisibleState = (initialState?: boolean) => {
     setOpen,
     hide,
     reveal,
+    /** A useful wrapper which adds `reveal` or `hide` action for wrapping function */
     withAction,
   };
 };

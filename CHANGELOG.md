@@ -1,3 +1,9 @@
+# 1.9.0
+
+- Added `withAction` function wrapper for `useVisibleState`
+- Added `callLimit` option for `usePolling` hook which limits the number of calls
+- Changed some param names for `usePolling`
+
 # 1.8.0
 
 - Added `useSyncState` hook

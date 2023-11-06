@@ -293,14 +293,21 @@ type UsePollingOptions = {
    * Time interval to call "poll" function
    * @default 3000
    */
-  pollingTime?: number;
+  timeInterval?: number;
   enabled?: Accessor<boolean>;
+  /**
+   * The maximum number of function calls
+   * When request count exceeds this limit, polling stops
+   * Pass Infinity to avoid this behavior if necessary
+   * @default 10
+   */
+  callLimit?: number;
   /**
    * This hook uses setTimeout for polling, so it might be the case when `poll` function triggers reactive things.
    * To make it work correctly pass proper owner for the `poll` function.
    * Otherwise it will be assigned automatically (the owner of the hook will be used)
    */
-  owner?: Owner;
+  owner?: Owner | null;
 };
 
 /**
@@ -496,11 +503,15 @@ This hook is useful when you work with dropdowns or popovers. These things might
 ### Definition
 
 ```tsx
+type Action = "hide" | "reveal";
+
 export declare const useVisibleState: (initialState?: boolean) => {
   isOpen: import("solid-js").Accessor<boolean>;
   setOpen: import("solid-js").Setter<boolean>;
   hide: () => false;
   reveal: () => true;
+  /** A useful wrapper which adds `reveal` or `hide` action for wrapping function */
+  withAction: <T extends any[], U>(action: Action, callback?: (...args: T) => U) => (...args: T) => U;
 };
 ```
 
