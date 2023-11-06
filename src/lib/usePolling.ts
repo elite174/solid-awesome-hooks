@@ -47,10 +47,7 @@ export const usePolling = (readyTrigger: Accessor<unknown>, poll: VoidFunction, 
       if (!isEnabled) return;
 
       const timer = setTimeout(() => {
-        if (remainingCalls <= 0) {
-          clearTimeout(timer);
-          return;
-        }
+        if (remainingCalls <= 0) return;
 
         pollWithOwner();
 
