@@ -1,4 +1,5 @@
 import { type Owner, onCleanup, runWithOwner, getOwner } from "solid-js";
+import { isServer } from "solid-js/web";
 
 type Options = {
   // Reason is passed to abort() function when owner scope cleanups
@@ -13,6 +14,12 @@ type Options = {
  * If there's no owner scope abort() won't be called
  */
 export const useAbortController = ({ reason, fallbackOwner }: Options = {}) => {
+  if (isServer)
+    return {
+      abort: () => {},
+      signal: {} as AbortSignal,
+    } satisfies AbortController;
+
   const controller = new AbortController();
 
   const owner = getOwner() ?? fallbackOwner;

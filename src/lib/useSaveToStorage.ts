@@ -24,7 +24,6 @@ type SaveToStorageOptions = {
 };
 
 const DEFAULT_OPTIONS = {
-  storage: localStorage,
   saveWhenIdle: true,
   defer: true,
   clearOnEmpty: false,
@@ -50,9 +49,12 @@ export const useSaveToStorage = <T extends Serializable>(
       dataToSave,
       (rawData) => {
         if (resolvedOptions.clearOnEmpty && (rawData === null || rawData === undefined))
-          resolvedOptions.storage.removeItem(key);
+          (resolvedOptions.storage ?? localStorage).removeItem(key);
         else
-          resolvedOptions.storage.setItem(key, typeof rawData === "object" ? JSON.stringify(rawData) : String(rawData));
+          (resolvedOptions.storage ?? localStorage).setItem(
+            key,
+            typeof rawData === "object" ? JSON.stringify(rawData) : String(rawData)
+          );
       },
       { defer: resolvedOptions.defer }
     )
